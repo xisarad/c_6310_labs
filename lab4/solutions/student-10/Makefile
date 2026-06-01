@@ -1,12 +1,12 @@
 NAME = filter
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I./inc
+CFLAGS = -Wall -Wextra -Werror -I./libft/inc
 
 SRC_DIR = src
 SRCS = $(SRC_DIR)/main.c
 OBJS = $(SRCS:.c=.o)
 
-LIBFT_DIR = ../../../lab3-libft/solutions/student-10
+LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)
@@ -22,9 +22,11 @@ $(LIBFT):
 
 clean:
 	rm -f $(OBJS)
+	make -C $(LIBFT_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
