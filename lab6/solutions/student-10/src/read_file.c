@@ -34,7 +34,6 @@ char	**read_file(const char *filename)
 	char	**lines;
 	char	*line;
 	int		count;
-	int		i;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
