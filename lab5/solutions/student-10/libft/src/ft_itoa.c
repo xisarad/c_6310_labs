@@ -1,4 +1,3 @@
-//Число → строка	123 превращаем в "123"	-42→"-42"
 #include "libft.h"
 
 static int	num_len(int n)
@@ -38,7 +37,24 @@ char	*ft_itoa(int n)
 	int		is_negative;
 
 	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
+	{
+		str = malloc(sizeof(char) * 12);
+		if (!str)
+			return (NULL);
+		str[0] = '-';
+		str[1] = '2';
+		str[2] = '1';
+		str[3] = '4';
+		str[4] = '7';
+		str[5] = '4';
+		str[6] = '8';
+		str[7] = '3';
+		str[8] = '6';
+		str[9] = '4';
+		str[10] = '8';
+		str[11] = '\0';
+		return (str);
+	}
 	len = num_len(n);
 	is_negative = (n < 0);
 	str = (char *)malloc(sizeof(char) * (len + 1));
