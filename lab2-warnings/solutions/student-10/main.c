@@ -3,17 +3,20 @@
  * Студент: номер: 10
  * Вариант: 11
  * Задание: 11 (Сумма ряда 1 + 1/2 + 1/3 + ... + 1/n)
- * Количество предупреждений: 14 (9 -Wall, 5 -Wextra)
+ * Количество предупреждений: 15 (10 -Wall, 5 -Wextra)
  */
 
 #include <stdio.h>
 #include <setjmp.h>
 
+
+
+
 /* ========== ПРЕДУПРЕЖДЕНИЯ -Wall ========== */
 
 /* WARNING 1: -Wunused-parameter */
 static void func_unused_param(int unused) {
-    (void)unused;  // параметр не используется
+    // параметр не используется — предупреждение появится
 }
 
 /* WARNING 2: -Wunused-function */
@@ -63,26 +66,31 @@ int char_subscript_demo(void) {
     return arr[c];        // char используется как индекс
 }
 
+/* WARNING 10: -Wswitch-enum */
+enum Colors { RED, GREEN, BLUE };
+void switch_enum_demo(enum Colors color) {
+    switch (color) {
+        case RED:
+            break;
+        // GREEN и BLUE не обработаны
+    }
+}
+
+
+
 
 /* ========== ПРЕДУПРЕЖДЕНИЯ -Wextra (бонус) ========== */
 
-/* WARNING 10: -Wunused-but-set-variable */
+/* WARNING 11: -Wunused-but-set-variable */
 void unused_but_set_demo(void) {
     int value = 42;       // присвоили, но не использовали
 }
 
-/* WARNING 11: -Wtype-limits */
+/* WARNING 12: -Wtype-limits */
 unsigned int type_limits_demo(void) {
     unsigned int x = 5;
     if (x >= 0) return x;  // unsigned всегда >= 0
     return 0;
-}
-
-/* WARNING 12: -Wmaybe-uninitialized */
-int maybe_uninitialized_demo(int flag) {
-    int x;
-    if (flag == 1) x = 100;  // инициализация только при flag==1
-    return x;                 // может быть не инициализирована
 }
 
 /* WARNING 13: -Wmissing-field-initializers */
@@ -101,6 +109,11 @@ int overflow_demo(void) {
     return x;
 }
 
+/* WARNING 15: -Wunused-but-set-parameter */
+static void unused_but_set_param(int value) {
+    value = 42;  // присвоили, но не использовали
+}
+
 
 /* ========== ОСНОВНАЯ ПРОГРАММА ========== */
 
@@ -117,11 +130,12 @@ int main(void) {
     parentheses_demo(1, 2);
     empty_body_demo(5);
     char_subscript_demo();
+    switch_enum_demo(RED);
     unused_but_set_demo();
     type_limits_demo();
-    maybe_uninitialized_demo(0);
     missing_init_demo();
     overflow_demo();
+    unused_but_set_param(100);
     
     /* ОСНОВНАЯ ЛОГИКА ЗАДАНИЯ (СУММА РЯДА) */
     printf("Sum of series: 1 + 1/2 + 1/3 + ... + 1/n\n");
