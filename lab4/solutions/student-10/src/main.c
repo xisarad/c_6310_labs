@@ -33,7 +33,6 @@ int	predicate_digit(const char *str, ...)
 {
 	int	i;
 
-	(void)str;
 	i = 0;
 	if (!str || str[0] == '\0')
 		return (0);
@@ -46,21 +45,18 @@ int	predicate_digit(const char *str, ...)
 	return (1);
 }
 
-typedef struct s_filter
+static int	get_filter_index(const char *name)
 {
-	char	*name;
-	int		(*predicate)(const char *str, ...);
-}	t_filter;
-
-t_filter	filters[] = {
-	{"len", predicate_len},
-	{"start", predicate_start},
-	{"digit", predicate_digit},
-	{NULL, NULL}
-};
-
-int	get_filter_index(const char *name)
-{
+	static struct s_filter
+	{
+		char	*name;
+		int		(*predicate)(const char *str, ...);
+	}	filters[] = {
+		{"len", predicate_len},
+		{"start", predicate_start},
+		{"digit", predicate_digit},
+		{NULL, NULL}
+	};
 	int	i;
 
 	i = 0;
@@ -73,10 +69,11 @@ int	get_filter_index(const char *name)
 	return (-1);
 }
 
-char	**read_lines_from_stdin(int *count)
+static char	**read_lines_from_stdin(int *count)
 {
 	char	buffer[4096];
 	char	*all;
+	char	*temp;
 	char	**lines;
 	int		bytes_read;
 
@@ -87,9 +84,11 @@ char	**read_lines_from_stdin(int *count)
 	while (bytes_read > 0)
 	{
 		buffer[bytes_read] = '\0';
-		all = ft_strjoin(all, buffer);
-		if (!all)
+		temp = ft_strjoin(all, buffer);
+		free(all);
+		if (!temp)
 			return (NULL);
+		all = temp;
 		bytes_read = read(0, buffer, 4095);
 	}
 	lines = ft_split(all, '\n');
