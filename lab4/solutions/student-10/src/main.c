@@ -7,6 +7,46 @@
 #include "libft.h"
 #include <stdarg.h>
 
+int	match(const char *str, int criterion, ...)
+{
+	va_list	args;
+	int		result;
+
+	va_start(args, criterion);
+	result = 0;
+	if (criterion == 0)
+	{
+		int	threshold = va_arg(args, int);
+		result = ((int)ft_strlen(str) > threshold);
+	}
+	else if (criterion == 1)
+	{
+		char	*prefix = va_arg(args, char *);
+		result = (ft_strncmp(str, prefix, ft_strlen(prefix)) == 0);
+	}
+	else if (criterion == 2)
+	{
+		int	i = 0;
+		result = 1;
+		if (!str || str[0] == '\0')
+			result = 0;
+		else
+		{
+			while (str[i])
+			{
+				if (!ft_isdigit(str[i]))
+				{
+					result = 0;
+					break;
+				}
+				i++;
+			}
+		}
+	}
+	va_end(args);
+	return (result);
+}
+
 int	predicate_len(const char *str, ...)
 {
 	va_list	args;
@@ -15,7 +55,7 @@ int	predicate_len(const char *str, ...)
 	va_start(args, str);
 	threshold = va_arg(args, int);
 	va_end(args);
-	return ((int)ft_strlen(str) > threshold);
+	return (match(str, 0, threshold));
 }
 
 int	predicate_start(const char *str, ...)
@@ -26,23 +66,13 @@ int	predicate_start(const char *str, ...)
 	va_start(args, str);
 	prefix = va_arg(args, char *);
 	va_end(args);
-	return (ft_strncmp(str, prefix, ft_strlen(prefix)) == 0);
+	return (match(str, 1, prefix));
 }
 
 int	predicate_digit(const char *str, ...)
 {
-	int	i;
-
-	i = 0;
-	if (!str || str[0] == '\0')
-		return (0);
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
+	(void)str;
+	return (match(str, 2));
 }
 
 static int	get_filter_index(const char *name)
@@ -156,14 +186,14 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < string_count)
 	{
-		int	match = 0;
+		int	match_result = 0;
 		if (filter_idx == 0)
-			match = predicate_len(strings[i], threshold);
+			match_result = predicate_len(strings[i], threshold);
 		else if (filter_idx == 1)
-			match = predicate_start(strings[i], argv[2]);
+			match_result = predicate_start(strings[i], argv[2]);
 		else
-			match = predicate_digit(strings[i]);
-		if (match)
+			match_result = predicate_digit(strings[i]);
+		if (match_result)
 			ft_putendl_fd(strings[i], 1);
 		i++;
 	}
